@@ -14,7 +14,6 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import first.robot.simulation.DrivetrainSim;
 import first.robot.simulation.FuelSim;
 import first.robot.simulation.SingleFlywheelSim;
-
 import org.wpilib.drive.DifferentialDrive;
 import org.wpilib.framework.OpModeRobot;
 import org.wpilib.hardware.bus.CANPort;
@@ -44,7 +43,8 @@ public class Robot extends OpModeRobot {
       new DifferentialDrive(m_fl::setThrottle, m_fr::setThrottle);
 
   private final DrivetrainSim drivetrainSim = new DrivetrainSim(m_fl, m_fr);
-  private final SingleFlywheelSim intakeLauncherSim = SingleFlywheelSim.forIntakeLauncher(intakeLauncher);
+  private final SingleFlywheelSim intakeLauncherSim =
+      SingleFlywheelSim.forIntakeLauncher(intakeLauncher);
   private final SingleFlywheelSim feederSim = SingleFlywheelSim.forFeeder(feeder);
 
   private final OnboardIMU imu = new OnboardIMU(MountOrientation.FLAT);

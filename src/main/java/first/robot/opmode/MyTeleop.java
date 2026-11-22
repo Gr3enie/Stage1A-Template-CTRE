@@ -27,22 +27,19 @@ public class MyTeleop extends PeriodicOpMode {
     robot.drivetrain.arcadeDrive(controller.getLeftY(), controller.getRightX());
 
     if (controller.getAButton()) {
-      //intake
+      // intake
       robot.intakeLauncher.setThrottle(0.8);
       robot.feeder.setThrottle(-1.);
-    }
-    else if (controller.getBButton()) {
-      //shoot
+    } else if (controller.getBButton()) {
+      // shoot
       robot.intakeLauncher.setThrottle(0.9);
       robot.feeder.setThrottle(0.75);
-    }
-    else if (controller.getYButton()) {
-      //outtake
+    } else if (controller.getYButton()) {
+      // outtake
       robot.intakeLauncher.setThrottle(-0.8);
       robot.feeder.setThrottle(1.);
-    }
-    else {
-      //stop
+    } else {
+      // stop
       robot.intakeLauncher.setThrottle(0);
       robot.feeder.setThrottle(0);
     }

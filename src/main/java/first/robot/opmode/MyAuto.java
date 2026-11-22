@@ -36,10 +36,8 @@ public class MyAuto extends PeriodicOpMode {
   public void periodic() {
     if (!timer.hasElapsed(4.)) {
       robot.drivetrain.arcadeDrive(0.5, 0);
-    }
-    else if (!timer.hasElapsed(6.)) {
+    } else if (!timer.hasElapsed(6.)) {
       robot.drivetrain.arcadeDrive(0, 0.2);
-    }
-    else robot.drivetrain.arcadeDrive(0, 0);
+    } else robot.drivetrain.arcadeDrive(0, 0);
   }
 }
