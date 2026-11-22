@@ -20,7 +20,6 @@ import org.wpilib.framework.OpModeRobot;
 import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.hardware.imu.OnboardIMU;
 import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
-import org.wpilib.simulation.FlywheelSim;
 
 /**
  * The methods in this class are called automatically as described in the OpModeRobot documentation.
