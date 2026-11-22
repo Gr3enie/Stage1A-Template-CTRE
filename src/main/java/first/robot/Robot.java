@@ -5,18 +5,18 @@
  */
 package first.robot;
 
-import org.wpilib.drive.DifferentialDrive;
-import org.wpilib.framework.OpModeRobot;
-import org.wpilib.hardware.bus.CANPort;
-import org.wpilib.hardware.imu.OnboardIMU;
-import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
-
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import first.robot.simulation.DrivetrainSim;
+import org.wpilib.drive.DifferentialDrive;
+import org.wpilib.framework.OpModeRobot;
+import org.wpilib.hardware.bus.CANPort;
+import org.wpilib.hardware.imu.OnboardIMU;
+import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
 
 /**
  * The methods in this class are called automatically as described in the OpModeRobot documentation.
@@ -27,15 +27,19 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
  */
 public class Robot extends OpModeRobot {
 
-  //This is where all the drivetrain motor controllers are defined.
+  // This is where all the drivetrain motor controllers are defined.
   private final TalonFX m_fl = new TalonFX(0, new CANBus(CANPort.CAN_S0));
   private final TalonFX m_bl = new TalonFX(1, new CANBus(CANPort.CAN_S0));
   private final TalonFX m_fr = new TalonFX(2, new CANBus(CANPort.CAN_S0));
   private final TalonFX m_br = new TalonFX(3, new CANBus(CANPort.CAN_S0));
 
-  public final DifferentialDrive drivetrain = new DifferentialDrive(m_fl::setThrottle, m_fr::setThrottle);
+  public final DifferentialDrive drivetrain =
+      new DifferentialDrive(m_fl::setThrottle, m_fr::setThrottle);
+
+  private final DrivetrainSim drivetrainSim = new DrivetrainSim(m_fl, m_fr);
 
   private final OnboardIMU imu = new OnboardIMU(MountOrientation.FLAT);
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -44,8 +48,8 @@ public class Robot extends OpModeRobot {
     TalonFXConfiguration lConf = new TalonFXConfiguration();
     TalonFXConfiguration rConf = new TalonFXConfiguration();
 
-    lConf.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
-    rConf.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+    lConf.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+    rConf.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
 
     m_fl.getConfigurator().apply(lConf);
     m_bl.getConfigurator().apply(lConf);
@@ -57,5 +61,7 @@ public class Robot extends OpModeRobot {
   }
 
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    drivetrainSim.periodic();
+  }
 }
