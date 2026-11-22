@@ -12,11 +12,15 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import first.robot.simulation.DrivetrainSim;
+import first.robot.simulation.FuelSim;
+import first.robot.simulation.SingleFlywheelSim;
+
 import org.wpilib.drive.DifferentialDrive;
 import org.wpilib.framework.OpModeRobot;
 import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.hardware.imu.OnboardIMU;
 import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
+import org.wpilib.simulation.FlywheelSim;
 
 /**
  * The methods in this class are called automatically as described in the OpModeRobot documentation.
@@ -27,16 +31,22 @@ import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
  */
 public class Robot extends OpModeRobot {
 
-  // This is where all the drivetrain motor controllers are defined.
-  private final TalonFX m_fl = new TalonFX(0, new CANBus(CANPort.CAN_S0));
-  private final TalonFX m_bl = new TalonFX(1, new CANBus(CANPort.CAN_S0));
-  private final TalonFX m_fr = new TalonFX(2, new CANBus(CANPort.CAN_S0));
-  private final TalonFX m_br = new TalonFX(3, new CANBus(CANPort.CAN_S0));
+  private final CANBus mainCAN = new CANBus(CANPort.CAN_S0);
+
+  private final TalonFX m_fl = new TalonFX(0, mainCAN);
+  private final TalonFX m_bl = new TalonFX(1, mainCAN);
+  private final TalonFX m_fr = new TalonFX(2, mainCAN);
+  private final TalonFX m_br = new TalonFX(3, mainCAN);
+
+  public final TalonFX intakeLauncher = new TalonFX(4, mainCAN);
+  public final TalonFX feeder = new TalonFX(5, mainCAN);
 
   public final DifferentialDrive drivetrain =
       new DifferentialDrive(m_fl::setThrottle, m_fr::setThrottle);
 
   private final DrivetrainSim drivetrainSim = new DrivetrainSim(m_fl, m_fr);
+  private final SingleFlywheelSim intakeLauncherSim = SingleFlywheelSim.forIntakeLauncher(intakeLauncher);
+  private final SingleFlywheelSim feederSim = SingleFlywheelSim.forFeeder(feeder);
 
   private final OnboardIMU imu = new OnboardIMU(MountOrientation.FLAT);
 
@@ -63,5 +73,8 @@ public class Robot extends OpModeRobot {
   @Override
   public void simulationPeriodic() {
     drivetrainSim.periodic();
+    intakeLauncherSim.periodic();
+    feederSim.periodic();
+    FuelSim.periodic();
   }
 }
